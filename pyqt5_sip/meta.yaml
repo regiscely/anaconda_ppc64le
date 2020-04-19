@@ -1,0 +1,40 @@
+{% set name = "pyqt5_sip" %}
+{% set version = "12.7.2" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "https://files.pythonhosted.org/packages/32/24/1537d09deb3aee2e5c390cd456420a455ac47ef3f8ac323d8397af1c1c13/PyQt5_sip-12.7.2.tar.gz"
+  sha256: "16a19b9f36985b8bff30b89fb8859d831713dd528fba5600563e36ff077960a2"
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv "
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - make
+
+  host:
+    - pip
+    - python
+  run:
+    - python
+
+about:
+  home: "The package home page"
+  license: "SIP"
+  license_family: "OTHER"
+  license_file: ""
+  summary: "Summary of the package"
+  doc_url: ""
+  dev_url: ""
+
+extra:
+  recipe-maintainers:
+    - your-github-id-here
+
