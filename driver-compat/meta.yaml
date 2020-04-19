@@ -1,0 +1,15 @@
+{% set version = "0.0.1" %}
+
+package:
+  name: driver-compat
+  version: {{ version }}
+
+
+requirements:
+  run:
+    - cudatoolkit-dev >=10.2
+
+about:
+  summary: "CUDA 10.2 driver compat"
+  description: Scripts adding cuda 10.2 compatibility with old nvidia drivers.
+
