@@ -1,0 +1,139 @@
+{% set name = "spyder" %}
+{% set version = "4.1.1" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: 49336f68812e91790b135cf680fcd2f18f5353c909027a7749881fe75d94528d
+
+build:
+  number: 0
+  entry_points:
+    - spyder = spyder.app.start:main
+
+requirements:
+  host:
+    - pip
+    - python
+  run:
+    - python >=3.7,<3.8.0a0
+    - atomicwrites >=1.2.0
+    - chardet >=2.0.0
+    - cloudpickle >=0.5.0
+    - diff-match-patch >=20181111
+    - intervaltree
+    - ipython >=4.0
+    - jedi ==0.15.2
+    - keyring  # [not (linux and py2k)]
+    - nbconvert >=4.0
+    - numpydoc >=0.6.0
+    - paramiko >=2.4.0  # [win]
+    - parso ==0.5.2
+    - pexpect >=4.4.0
+    - pickleshare >=0.4
+    - psutil >=5.3
+    - pygments >=2.0
+    - pylint >=0.25
+    - pyqt5 <5.15
+    - pyqtwebengine <5.15
+    - python.app  # [osx]
+    - python-language-server >=0.31.9,<0.32.0
+    - pyxdg >=0.26  # [linux]
+    - pyzmq >=17
+    - qdarkstyle >=2.8
+    - qtawesome >=0.5.7
+    - qtconsole >=4.6.0
+    - qtpy >=1.5.0
+    - rtree >=0.8.3
+    - sphinx >=0.6.6
+    - spyder-kernels >=1.9.0,<1.10.0
+    - watchdog
+
+
+
+test:
+  imports:
+    - spyder
+    - spyder.api
+    - spyder.app
+    - spyder.config
+    - spyder.plugins
+    - spyder.plugins.breakpoints
+    - spyder.plugins.breakpoints.widgets
+    - spyder.plugins.completion
+    - spyder.plugins.completion.fallback
+    - spyder.plugins.completion.kite
+    - spyder.plugins.completion.kite.bloomfilter
+    - spyder.plugins.completion.kite.parsing
+    - spyder.plugins.completion.kite.providers
+    - spyder.plugins.completion.kite.utils
+    - spyder.plugins.completion.kite.widgets
+    - spyder.plugins.completion.languageserver
+    - spyder.plugins.completion.languageserver.providers
+    - spyder.plugins.completion.languageserver.transport
+    - spyder.plugins.completion.languageserver.transport.common
+    - spyder.plugins.completion.languageserver.transport.stdio
+    - spyder.plugins.completion.languageserver.transport.tcp
+    - spyder.plugins.console
+    - spyder.plugins.console.utils
+    - spyder.plugins.console.widgets
+    - spyder.plugins.editor
+    - spyder.plugins.editor.api
+    - spyder.plugins.editor.extensions
+    - spyder.plugins.editor.panels
+    - spyder.plugins.editor.utils
+    - spyder.plugins.editor.widgets
+    - spyder.plugins.explorer
+    - spyder.plugins.explorer.widgets
+    - spyder.plugins.findinfiles
+    - spyder.plugins.help
+    - spyder.plugins.help.utils
+    - spyder.plugins.history
+    - spyder.plugins.io_dcm
+    - spyder.plugins.io_hdf5
+    - spyder.plugins.ipythonconsole
+    - spyder.plugins.ipythonconsole.comms
+    - spyder.plugins.ipythonconsole.utils
+    - spyder.plugins.ipythonconsole.widgets
+    - spyder.plugins.onlinehelp
+    - spyder.plugins.outlineexplorer
+    - spyder.plugins.plots
+    - spyder.plugins.plots.widgets
+    - spyder.plugins.profiler
+    - spyder.plugins.profiler.widgets
+    - spyder.plugins.projects
+    - spyder.plugins.projects.projecttypes
+    - spyder.plugins.projects.utils
+    - spyder.plugins.projects.widgets
+    - spyder.plugins.pylint
+    - spyder.plugins.pylint.widgets
+    - spyder.plugins.variableexplorer
+    - spyder.plugins.variableexplorer.widgets
+    - spyder.plugins.variableexplorer.widgets.objectexplorer
+    - spyder.plugins.workingdirectory
+    - spyder.preferences
+    - spyder.utils
+    - spyder.utils.external
+    - spyder.utils.external.binaryornot
+    - spyder.utils.external.pybloom_pyqt
+    - spyder.utils.introspection
+    - spyder.utils.snippets
+    - spyder.widgets
+    - spyder.widgets.github
+    - spyder.workers
+
+about:
+  home: "https://www.spyder-ide.org/"
+  license: MIT
+  license_family: MIT
+  license_file: 
+  summary: "The Scientific Python Development Environment"
+  doc_url: 
+  dev_url: 
+
+extra:
+  recipe-maintainers:
+    - your-github-id-here
