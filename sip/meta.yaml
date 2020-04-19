@@ -1,0 +1,67 @@
+{% set name = "sip" %}
+{% set version = "5.1.1" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: "3b600dd1c8293bb7cf002a20dbbc736010c6a5e161241d73b16685744ffe57c2"
+
+build:
+  number: 0
+  entry_points:
+    - sip-distinfo = sipbuild.distinfo.main:main
+    - sip-module = sipbuild.module.main:main
+    - sip-build = sipbuild.tools.build:main
+    - sip-install = sipbuild.tools.install:main
+    - sip-sdist = sipbuild.tools.sdist:main
+    - sip-wheel = sipbuild.tools.wheel:main
+    - sip5 = sipbuild.legacy.sip5:main
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv "
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - make
+  host:
+    - packaging
+    - pip
+    - python
+    - toml
+  run:
+    - packaging
+    - python
+    - toml
+
+test:
+  imports:
+    - sipbuild
+    - sipbuild.distinfo
+    - sipbuild.legacy
+    - sipbuild.module
+    - sipbuild.tools
+  commands:
+    - sip-distinfo --help
+    - sip-module --help
+    - sip-build --help
+    - sip-install --help
+    - sip-sdist --help
+    - sip-wheel --help
+    - sip5 --help
+
+about:
+  home: "The package home page"
+  license: "SIP"
+  license_family: "OTHER"
+  license_file: ""
+  summary: "Summary of the package"
+  doc_url: ""
+  dev_url: ""
+
+extra:
+  recipe-maintainers:
+    - your-github-id-here
+
