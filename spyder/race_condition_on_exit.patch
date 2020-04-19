@@ -1,13 +1,13 @@
+diff --git a/spyder/plugins/ipythonconsole/widgets/client.py b/spyder/plugins/ipythonconsole/widgets/client2.py
 index acd812b..36f334c 100644
---- a/plugins/ipythonconsole/widgets/client.py
-+++ bplugins/ipythonconsole/widgets//client.py
+--- a/spyder/plugins/ipythonconsole/widgets/client.py
++++ b/spyder/plugins/ipythonconsole/widgets/client2.py
 @@ -509,6 +509,8 @@ class ClientWidget(QWidget, SaveHistoryMixin):
-
+ 
      def finalize_shutdown(self):
          """Finalise the shutdown."""
 +        import time
 +        time.sleep(1)
          if self.get_kernel() is not None and not self.slave:
              self.shellwidget.kernel_manager.shutdown_kernel()
-
-
+ 
