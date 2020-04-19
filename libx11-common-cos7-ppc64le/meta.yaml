@@ -1,0 +1,59 @@
+# A few variables that make this a tiny bit more portable
+{% set centos_name = "libX11-common" %}
+{% set name = centos_name |lower %}
+{% set version = '1.6.7' %}
+{% set centos_build = '2' %}
+# No good way to get this other than to fail once, I think???
+{% set so_version = '1' %}
+{% set el = 'el7' %}
+{% set arch = "ppc64le" %}
+{% set sysroot_arch = "powerpc64le" %}
+{% set cos = "cos7" %}
+{% set url_base = "http://mirror.centos.org/altarch/7/os/ppc64le/Packages/" %}
+
+package:
+  name: {{ name }}-{{ cos }}-{{ arch }}
+  version: {{ version }}
+
+source:
+  - url: {{ url_base }}{{ centos_name }}-{{ version }}-{{ centos_build }}.{{ el }}.noarch.rpm
+    sha256: dc2895887d4354cff78b1992896dd6b925602a13134321b0be45551c022bc420 
+    # conda seems to remove folders if they are the only ones there
+    # we need to keep the structure of the RPM
+    # https://github.com/conda/conda-build/issues/3595
+    folder: binary/usr
+
+build:
+  number: 0
+  noarch: generic
+  missing_dso_whitelist:
+    - '*'
+
+test:
+  # dummy requirement to workaround a bug with the CDT tests
+  requires:
+    - zlib
+  commands:
+    - test -f "$PREFIX/{{ sysroot_arch }}-conda_{{ cos }}-linux-gnu/sysroot/usr/share/X11/XErrorDB"
+
+outputs:
+  - name: {{ name }}-{{ cos }}-{{ arch }}
+    build:
+      script:
+        - mkdir -p {{ PREFIX }}/{{ sysroot_arch }}-conda_{{ cos }}-linux-gnu/sysroot
+        - pushd {{ PREFIX }}/{{ sysroot_arch }}-conda_{{ cos }}-linux-gnu/sysroot > /dev/null 2>&1
+        - cp -Rf {{ SRC_DIR }}/binary/* .
+
+
+
+about:
+  home: http://www.x.org
+  license: MIT
+  license_file: COPYING
+  license_family: MIT
+  summary: "(CDT) Common data for libX11"
+  description: |
+    libX11 common data
+extra:
+  recipe-maintainers:
+    - regiscely
