@@ -14,7 +14,13 @@ requirements:
     - python
     - pyqt-builder
     - sip     >=5.1
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - make
 
+  host:
+    - python
+    - dbus
   run:
     - python
     - pyqt5_sip
