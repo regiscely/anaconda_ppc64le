@@ -1,0 +1,32 @@
+package:
+  name: pyqtwebengine
+  version: 5.14.1
+source:
+  fn:   PyQtWebEngine-5.14.0.tar.gz                                                       [unix]
+  url:  https://files.pythonhosted.org/packages/47/9f/60e630711fd1dd14ef3bd95c86c733c86b8c0853749c7a03691f681f13fd/PyQtWebEngine-5.14.0.tar.gz    [unix]
+  sha1: bb281ae543c3d765b21e9706ca92d4302e19c43d                                          [unix]
+
+
+requirements:
+  build:
+    - python
+    - pyqt-builder
+    - pyqt5   >=5.14
+    - pyqt5_sip
+    - sip     >=5.1
+    - jom                 [win]
+
+  run:
+    - python
+    - pyqt5_sip
+    - pyqt5   >=5.14
+    - sip     >=5.1
+
+#test:
+#  imports:
+#    - PyQt5.QtCore
+
+about:
+  home: http://www.riverbankcomputing.co.uk/software/pyqt
+  license: GPL
+
