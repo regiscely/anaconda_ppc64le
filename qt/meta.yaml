@@ -7,6 +7,9 @@ package:
 source:
   - url: /tmp/qt-everywhere-src-{{ version }}_ppc64le.B.tar.gz
     md5: f294d0105f4606c0e47295c1d63623f0
+    patches:
+       - patches/0004-qtbase-never-enable-new-dtags.patch
+       - patches/0006-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroo.patch
 
 #  - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
 #    sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']
@@ -38,13 +41,19 @@ requirements:
     - {{ compiler('cxx') }}              # [not win]
     - {{ compiler('c') }}                # [not win]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
+    - {{ cdt('libx11') }}                # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
+    - {{ cdt('libx11-common') }}         # [linux]
+    - {{ cdt('libxext') }}               # [linux]
     - {{ cdt('libxext-devel') }}         # [linux]
     - {{ cdt('libxrender-devel') }}      # [linux]
     - {{ cdt('mesa-libgl-devel') }}      # [linux]
     - {{ cdt('mesa-libegl-devel') }}     # [linux]
     - {{ cdt('mesa-dri-drivers') }}      # [linux]
     - {{ cdt('mesa-khr-devel') }}        # [linux]
+    - {{ cdt('libglvnd') }}              # [linux]
+    - {{ cdt('libglvnd-glx') }}          # [linux]
+    - {{ cdt('libxau') }}                # [linux]
     - {{ cdt('libxau-devel') }}          # [linux]
     - {{ cdt('alsa-lib-devel') }}        # [linux]
     - {{ cdt('gtk2-devel') }}            # [linux]
@@ -52,16 +61,20 @@ requirements:
     - {{ cdt('libdrm-devel') }}          # [linux]
     - {{ cdt('libxcb') }}                # [linux]
     - {{ cdt('libxcb-devel') }}          # [linux]
+    - {{ cdt('libXdmcp') }}              # [linux]
+    - {{ cdt('libXdmcp-devel') }}        # [linux]
     - {{ cdt('libxkbcommon-x11-devel') }}    # [linux]
     - {{ cdt('libxkbcommon-devel') }}    # [linux]
     - {{ cdt('xcb-util') }}              # [linux]
     - {{ cdt('xcb-util-devel') }}        # [linux]
     - {{ cdt('libxcomposite-devel') }}   # [linux]
     - {{ cdt('libxcursor-devel') }}      # [linux]
+    - {{ cdt('libxi') }}                 # [linux]
     - {{ cdt('libxi-devel') }}           # [linux]
     - {{ cdt('libxrandr-devel') }}       # [linux]
     - {{ cdt('pciutils-devel') }}        # [linux]
     - {{ cdt('libxscrnsaver-devel') }}   # [linux]
+    - {{ cdt('libxtst') }}               # [linux]
     - {{ cdt('libxtst-devel') }}         # [linux]
     - {{ cdt('libselinux-devel') }}      # [linux]
     - {{ cdt('libxdamage') }}            # [linux]
@@ -124,6 +137,7 @@ requirements:
     - mysql                              # [not win]
     - postgresql                         # [not win]
     - zlib
+    - libiconv
     - libxcb                             # [linux]
     # We cannot install OpenSSL into the prefix when building qtwebengine
     # on linux as BoringSSL and OpenSSL then conflict with each other.

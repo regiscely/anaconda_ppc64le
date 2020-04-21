@@ -8,7 +8,7 @@ echo "DEBUG DEBUG DEBUG"
 
 
 echo $HOST
-
+echo $PREFIX
 
 
 
@@ -36,6 +36,7 @@ echo PREFIX=${PREFIX}
 echo BUILD_PREFIX=${BUILD_PREFIX}
 USED_BUILD_PREFIX=${BUILD_PREFIX:-${PREFIX}}
 echo USED_BUILD_PREFIX=${BUILD_PREFIX}
+
 
 MAKE_JOBS=$CPU_COUNT
 # You can use this to cut down on the number of modules built. Of course the Qt package will not be of
@@ -106,7 +107,8 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # https://codereview.qt-project.org/#/c/157817/
     #
     sed -i "s/-isystem//g" "qtbase/mkspecs/common/gcc-base.conf"
-    export PKG_CONFIG_LIBDIR=$(${USED_BUILD_PREFIX}/bin/pkg-config --pclibdir)
+    #export PKG_CONFIG_LIBDIR=$(${USED_BUILD_PREFIX}/bin/pkg-config --pclibdir)
+    export PKG_CONFIG_LIBDIR=$(${USED_BUILD_PREFIX}/bin/pkg-config --variable=pclibdir)
 
     export PATH=${PWD}:${PATH}
     declare -a SKIPS
@@ -165,6 +167,9 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # .. but it probably requires changing -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 to -L /usr/lib64
 
 
+    # RC
+    export PKG_CONFIG_PATH=${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64/pkgconfig/:${BUILD_PREFIX}/${HOST}/sysroot/usr/share/pkgconfig/:${BUILD_PREFIX}/${HOST}/sysroot/lib64/pkgconfig/
+    echo "Starting Configure Script"
     
     ./configure -prefix ${PREFIX} \
                 -libdir ${PREFIX}/lib \
@@ -172,13 +177,28 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -headerdir ${PREFIX}/include/qt \
                 -archdatadir ${PREFIX} \
                 -datadir ${PREFIX} \
+                -shared \
                 -I ${SRC_DIR}/openssl_hack/include \
                 -I ${PREFIX}/include \
                 -L ${PREFIX}/lib \
                 -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
+                -L /tmp/libs \
                 -opensource \
                 -confirm-license \
                 -verbose 
+
+     export LD_LIBRARY_PATH=/tmp/libs:$PREFIX/lib:${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64:$LD_LIBRARY_PATH
+     echo "GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+     echo "GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+     echo $PREFIX
+     echo $SRC_DIR
+     echo "GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+     echo "GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+
+     # ${MAKE_JOBS}
+     VERBOSE=1 CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j 4 || exit 1
+
+
 
 #    ./configure -prefix ${PREFIX} \
 #                -libdir ${PREFIX}/lib \
@@ -239,98 +259,12 @@ if [[ ${HOST} =~ .*linux.* ]]; then
         exit 1
       fi
     fi
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
+
+    echo "Start Building "
+    VERBOSE=1 CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
     make install
 fi
 
-if [[ ${HOST} =~ .*darwin.* ]]; then
-
-    # Avoid Xcode
-    cp "${RECIPE_DIR}"/xcrun .
-    cp "${RECIPE_DIR}"/xcodebuild .
-    # Some test runs 'clang -v', but I do not want to add it as a requirement just for that.
-    ln -s "${CXX}" ${HOST}-clang || true
-    # For ltcg we cannot use libtool (or at least not the macOS 10.9 system one) due to lack of LLVM bitcode support.
-    ln -s "${LIBTOOL}" libtool || true
-    # Just in-case our strip is better than the system one.
-    ln -s "${STRIP}" strip || true
-    chmod +x ${HOST}-clang libtool strip
-    # Qt passes clang flags to LD (e.g. -stdlib=c++)
-    export LD=${CXX}
-    PATH=${PWD}:${PATH}
-
-    # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
-    if [[ $(basename $CONDA_BUILD_SYSROOT) != "MacOSX10.12.sdk" ]]; then
-      echo "WARNING: You asked me to use $CONDA_BUILD_SYSROOT as the MacOS SDK"
-      echo "         But because of the use of Objective-C Generics we need at"
-      echo "         least MacOSX10.12.sdk"
-      CONDA_BUILD_SYSROOT=/opt/MacOSX10.12.sdk
-      if [[ ! -d $CONDA_BUILD_SYSROOT ]]; then
-        echo "ERROR: $CONDA_BUILD_SYSROOT is not a directory"
-        exit 1
-      fi
-    fi
-
-    # Move VERSION file which conflicts with version in libc++ headers in case-insensitive files
-    mv qtwebengine/src/3rdparty/chromium/third_party/libsrtp/VERSION qtwebengine/src/3rdparty/chromium/third_party/libsrtp/LIBSRTP_VERSION || true;
-
-    #             -qtlibinfix .conda \
-
-    ./configure -prefix $PREFIX \
-                -libdir $PREFIX/lib \
-                -bindir $PREFIX/bin \
-                -headerdir $PREFIX/include/qt \
-                -archdatadir $PREFIX \
-                -datadir $PREFIX \
-                -L $PREFIX/lib \
-                -I $PREFIX/include \
-                -R $PREFIX/lib \
-                -release \
-                -opensource \
-                -confirm-license \
-                -shared \
-                -nomake examples \
-                -nomake tests \
-                -verbose \
-                -skip wayland \
-                -system-libjpeg \
-                -system-libpng \
-                -system-zlib \
-                -system-sqlite \
-                -plugin-sql-sqlite \
-                -plugin-sql-mysql \
-                -plugin-sql-psql \
-                -qt-freetype \
-                -qt-pcre \
-                -no-framework \
-                -dbus \
-                -no-mtdev \
-                -no-harfbuzz \
-                -no-libudev \
-                -no-egl \
-                -no-openssl \
-                -optimize-size \
-                -sdk macosx10.12
-
-# For quicker turnaround when e.g. checking compilers optimizations
-#                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d
-# lto causes an increase in final tar.bz2 size of about 4% (tested with the above -skip options though, not the whole thing)
-#                -ltcg \
-
-    ####
-    make -j${MAKE_JOBS} module-qtwebengine || exit 1
-    if find . -name "libQt5WebEngine*dylib" -exec false {} +; then
-      echo "Did not build qtwebengine, exiting"
-      exit 1
-    fi
-    make -j${MAKE_JOBS} || exit 1
-    make install
-
-    # Avoid Xcode (2)
-    mkdir -p "${PREFIX}"/bin/xc-avoidance || true
-    cp "${RECIPE_DIR}"/xcrun "${PREFIX}"/bin/xc-avoidance/
-    cp "${RECIPE_DIR}"/xcodebuild "${PREFIX}"/bin/xc-avoidance/
-fi
 
 # Qt Charts
 # ---------
