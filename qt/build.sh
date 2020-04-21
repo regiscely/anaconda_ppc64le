@@ -2,6 +2,16 @@
 # -----------------------------
 rm -f .qmake.stash .qmake.cache || true
 
+
+
+echo "DEBUG DEBUG DEBUG"
+
+
+echo $HOST
+
+
+
+
 # Compile
 # -------
 chmod +x configure
@@ -153,6 +163,9 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # Had been trying with:
     #   -sysroot ${BUILD_PREFIX}/${HOST}/sysroot 
     # .. but it probably requires changing -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 to -L /usr/lib64
+
+
+    
     ./configure -prefix ${PREFIX} \
                 -libdir ${PREFIX}/lib \
                 -bindir ${PREFIX}/bin \
@@ -163,43 +176,57 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -I ${PREFIX}/include \
                 -L ${PREFIX}/lib \
                 -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
-                -release \
                 -opensource \
                 -confirm-license \
-                -shared \
-                -nomake examples \
-                -nomake tests \
-                -verbose \
-                -skip wayland \
-                -system-libjpeg \
-                -system-libpng \
-                -system-zlib \
-                -system-sqlite \
-                -plugin-sql-sqlite \
-                -plugin-sql-mysql \
-                -plugin-sql-psql \
-                -qt-pcre \
-                -qt-xcb \
-                -xkbcommon \
-                -dbus \
-                -no-linuxfb \
-                -no-libudev \
-                -no-avx \
-                -no-avx2 \
-                -optimize-size \
-                -reduce-relocations \
-                -cups \
-                -openssl-linked \
-                -openssl \
-                -Wno-expansion-to-defined \
-                -D _X_INLINE=inline \
-                -D XK_dead_currency=0xfe6f \
-                -D _FORTIFY_SOURCE=2 \
-                -D XK_ISO_Level5_Lock=0xfe13 \
-                -D FC_WEIGHT_EXTRABLACK=215 \
-                -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
-                -D GLX_GLXEXT_PROTOTYPES \
-                "${SKIPS[@]}"
+                -verbose 
+
+#    ./configure -prefix ${PREFIX} \
+#                -libdir ${PREFIX}/lib \
+#                -bindir ${PREFIX}/bin \
+#                -headerdir ${PREFIX}/include/qt \
+#                -archdatadir ${PREFIX} \
+#                -datadir ${PREFIX} \
+#                -I ${SRC_DIR}/openssl_hack/include \
+#                -I ${PREFIX}/include \
+#                -L ${PREFIX}/lib \
+#                -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
+#                -release \
+#                -opensource \
+#                -confirm-license \
+#                -shared \
+#                -nomake examples \
+#                -nomake tests \
+#                -verbose \
+#                -skip wayland \
+#                -system-libjpeg \
+#                -system-libpng \
+#                -system-zlib \
+#                -system-sqlite \
+#                -plugin-sql-sqlite \
+#                -plugin-sql-mysql \
+#                -plugin-sql-psql \
+#                -qt-pcre \
+#                -qt-xcb \
+#                -xkbcommon \
+#                -dbus \
+#                -no-linuxfb \
+#                -no-libudev \
+#                -no-avx \
+#                -no-avx2 \
+#                -optimize-size \
+#                -reduce-relocations \
+#                -cups \
+#                -openssl-linked \
+#                -openssl \
+#                -Wno-expansion-to-defined \
+#                -D _X_INLINE=inline \
+#                -D XK_dead_currency=0xfe6f \
+#                -D _FORTIFY_SOURCE=2 \
+#                -D XK_ISO_Level5_Lock=0xfe13 \
+#                -D FC_WEIGHT_EXTRABLACK=215 \
+#                -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
+#                -D GLX_GLXEXT_PROTOTYPES \
+#                "${SKIPS[@]}"
 
 # ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
 #                -ltcg \

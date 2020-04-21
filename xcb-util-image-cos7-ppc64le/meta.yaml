@@ -1,0 +1,78 @@
+# A few variables that make this a tiny bit more portable
+{% set centos_name = "xcb-util-image" %}
+{% set lib_name = "xcb-image" %}
+{% set name = centos_name |lower %}
+{% set version = '0.4.0' %}
+{% set centos_build = '2' %}
+# No good way to get this other than to fail once, I think???
+{% set so_version = '0' %}
+{% set el = 'el7' %}
+{% set arch = "ppc64le" %}
+{% set sysroot_arch = "powerpc64le" %}
+{% set cos = "cos7" %}
+{% set url_base = "http://mirror.centos.org/altarch/7/os/ppc64le/Packages/" %}
+
+package:
+  name: {{ name }}-{{ cos }}-{{ arch }}
+  version: {{ version }}
+
+source:
+  - url: {{ url_base }}{{ centos_name }}-{{ version }}-{{ centos_build }}.{{ el }}.{{ arch }}.rpm
+    sha256: 56535f72f9bad7c9114df81f4dc24164d3dec3fa80a6f41572613477cb185287
+    # conda seems to remove folders if they are the only ones there
+    # we need to keep the structure of the RPM
+    # https://github.com/conda/conda-build/issues/3595
+    folder: binary/usr
+  - url: {{ url_base }}{{ centos_name }}-devel-{{ version }}-{{ centos_build }}.{{ el }}.{{ arch }}.rpm
+    sha256: 5d6e1c77e9f73cf2dc302ca87af5340c60be2361f722fa6168c21a8bd45dd59a
+    folder: devel/usr
+
+build:
+  number: 0
+  noarch: generic
+  missing_dso_whitelist:
+    - '*'
+
+test:
+  # dummy requirement to workaround a bug with the CDT tests
+  requires:
+    - zlib
+  commands:
+    - test -f "$PREFIX/{{ sysroot_arch }}-conda_{{ cos }}-linux-gnu/sysroot/usr/lib64/lib{{ lib_name }}.so.{{ so_version }}"
+
+outputs:
+  - name: {{ name }}-{{ cos }}-{{ arch }}
+    build:
+      script:
+        - mkdir -p {{ PREFIX }}/{{ sysroot_arch }}-conda_{{ cos }}-linux-gnu/sysroot
+        - pushd {{ PREFIX }}/{{ sysroot_arch }}-conda_{{ cos }}-linux-gnu/sysroot > /dev/null 2>&1
+        - cp -Rf {{ SRC_DIR }}/binary/* .
+
+  - name: {{ name }}-devel-{{ cos }}-{{ arch }}
+    build:
+      noarch: generic
+      script:
+        - mkdir -p {{ PREFIX }}/{{ sysroot_arch }}-conda_{{ cos }}-linux-gnu/sysroot
+        - pushd {{ PREFIX }}/{{ sysroot_arch }}-conda_{{ cos }}-linux-gnu/sysroot > /dev/null 2>&1
+        - cp -Rf {{ SRC_DIR }}/devel/* .
+    requirements:
+      - {{ pin_subpackage(name + '-' + cos + '-' + arch, exact=True) }}
+    test:
+      # dummy requirement to workaround a bug with the CDT tests
+      requires:
+        - zlib
+      commands:
+        - test -f "$PREFIX/{{ sysroot_arch }}-conda_{{ cos }}-linux-gnu/sysroot/usr/lib64/lib{{ lib_name }}.so"
+
+about:
+  home: https://dri.sourceforge.net
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: "(CDT) Direct Rendering Manager runtime library"
+  description: Direct Rendering Manager runtime library
+
+extra:
+  recipe-maintainers:
+    - jayfurmanek
+
