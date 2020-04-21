@@ -1,0 +1,35 @@
+package:
+  name: cups-devel-cos7-ppc64le
+  version: 1.6.3
+
+source:
+  - url: http://mirror.centos.org/altarch/7/os/ppc64le/Packages/cups-devel-1.6.3-40.el7.ppc64le.rpm
+    sha256: 56e31e9d26f7fb7486d69f8e755c2b40bd49869797afacbd71929dfa598a9671
+    no_hoist: true
+    folder: binary
+  - url: http://vault.centos.org/centos/7.7.1908/os/Source/SPackages/cups-1.6.3-40.el7.src.rpm
+    folder: source
+
+build:
+  number: 2
+  noarch: generic
+  missing_dso_whitelist:
+    - '*'
+
+requirements:
+  build:
+    - cups-libs-cos7-ppc64le ==1.6.3
+  host:
+    - cups-libs-cos7-ppc64le ==1.6.3
+  run:
+    - cups-libs-cos7-ppc64le ==1.6.3
+
+about:
+  home: http://www.cups.org/
+  license: LGPLv2
+  license_family: LGPL
+  summary: "(CDT) Common Unix Printing System - development environment"
+  description: |
+        The Common UNIX Printing System provides a portable printing layer for UNIX®
+        operating systems. This is the development package for creating additional
+        printer drivers, and other CUPS services.

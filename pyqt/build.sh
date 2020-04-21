@@ -35,11 +35,8 @@ export PATH=${PWD}/bin:${PATH}
 
 # need to build a private copy of sip to avoid "module PyQt5.sip not found" error
 echo -e "\n************** start building a private sip module **************\n"
-#echo "PWD: ${SRC_DIR}"
 cd sip
-$PYTHON configure.py --sip-module PyQt5.sip
-make -j${CPU_COUNT} # ${VERBOSE_AT}
-make install
+$PYTHON -m pip install . --no-deps --ignore-installed -vv 
 cd ../
 echo -e "\n************************ built sip module ***********************\n"
 
@@ -49,6 +46,10 @@ echo -e "\n************************ built sip module ***********************\n"
 
 ## START BUILD
 echo -e "\n************** start building PyQt5 **************\n"
+
+#RC
+export LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
+
 cd pyqt5
 $PYTHON configure.py \
         --verbose \
@@ -83,7 +84,8 @@ $PYTHON configure.py \
         --enable QtSerialPort \
         --pyuic5-interpreter=`which python` \
         "${_extra_modules[@]}" \
-        -q ${PREFIX}/bin/qmake
+#        -q ${PREFIX}/bin/qmake
+        -q /usr/local/Qt-5.14.1/bin/qmake
 
 make -j${CPU_COUNT} ${VERBOSE_AT}
 make check

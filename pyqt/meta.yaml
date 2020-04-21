@@ -10,7 +10,7 @@ source:
     folder: pyqt5
 
   - url: https://files.pythonhosted.org/packages/0d/13/fd58831e545b153cc4d803da46c1666512a9e3d4210f7c7f5b70ccfdb157/sip-5.1.1.tar.gz
-    sha1: d001eb00f6dae26a952770e805b1519f61cae77d
+    sha1: 229a2e5d9a968b5eb3b7be26fa02a5bf0a2a759c 
     folder: sip
 
   - url: https://files.pythonhosted.org/packages/47/9f/60e630711fd1dd14ef3bd95c86c733c86b8c0853749c7a03691f681f13fd/PyQtWebEngine-5.14.0.tar.gz
