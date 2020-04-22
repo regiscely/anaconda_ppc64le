@@ -4,68 +4,11 @@ package:
   name: pyqt
   version: {{ version }}
 
-source:
-  - url: https://files.pythonhosted.org/packages/3a/fb/eb51731f2dc7c22d8e1a63ba88fb702727b324c6352183a32f27f73b8116/PyQt5-{{ version }}.tar.gz
-    sha1: 51ff3acf3d1271e566807b7132f163cf4cedb848
-    folder: pyqt5
-
-  - url: https://files.pythonhosted.org/packages/0d/13/fd58831e545b153cc4d803da46c1666512a9e3d4210f7c7f5b70ccfdb157/sip-5.1.1.tar.gz
-    sha1: 229a2e5d9a968b5eb3b7be26fa02a5bf0a2a759c 
-    folder: sip
-
-  - url: https://files.pythonhosted.org/packages/47/9f/60e630711fd1dd14ef3bd95c86c733c86b8c0853749c7a03691f681f13fd/PyQtWebEngine-5.14.0.tar.gz
-    sha1: bb281ae543c3d765b21e9706ca92d4302e19c43d
-    folder: pyqtwebengine
-
-build:
-  number: 1
-  run_exports:
-    {{ pin_subpackage('pyqt', max_pin='x.x') }}
 
 requirements:
-  build:
-    # We may want to find and add a Python dbus library?
-    # pkg-config --cflags-only-I --libs dbus-1
-    # The Python dbus module doesn't seem to be installed.
-    - {{ compiler('cxx') }}
-    - {{ compiler('c') }}
-    - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
-    - {{ cdt('libx11-devel') }}          # [linux]
-    - {{ cdt('libxcb') }}                # [linux]
-    - {{ cdt('libxext-devel') }}         # [linux]
-    - {{ cdt('libxrender-devel') }}      # [linux]
-    - {{ cdt('mesa-libgl-devel') }}      # [linux]
-    - {{ cdt('mesa-libegl-devel') }}     # [linux]
-    - {{ cdt('mesa-dri-drivers') }}      # [linux]
-    - {{ cdt('libxau-devel') }}          # [linux]
-    - {{ cdt('alsa-lib-devel') }}        # [linux]
-    - {{ cdt('gtk2-devel') }}            # [linux]
-    - {{ cdt('gtkmm24-devel') }}         # [linux]
-    - {{ cdt('libdrm-devel') }}          # [linux]
-    - {{ cdt('libxcomposite-devel') }}   # [linux]
-    - {{ cdt('libxcursor-devel') }}      # [linux]
-    - {{ cdt('libxi-devel') }}           # [linux]
-    - {{ cdt('libxrandr-devel') }}       # [linux]
-    - {{ cdt('pciutils-devel') }}        # [linux]
-    - {{ cdt('libxscrnsaver-devel') }}   # [linux]
-    - {{ cdt('libxtst-devel') }}         # [linux]
-    - {{ cdt('libselinux-devel') }}      # [linux]
-    - {{ cdt('libxdamage') }}            # [linux]
-    - {{ cdt('libxfixes') }}             # [linux]
-    - {{ cdt('libxxf86vm') }}            # [linux]
-    - {{ cdt('mesa-libgbm') }}           # [linux]
-    - jom  # [win]
-    - pkg-config  # [not win]
-  host:
-    - {{ cdt('mesa-libgl-devel') }}      # [linux]
-    - python
-    - dbus  # [not win]
-    #- qt 5.12.*
-    - enum34  # [py27]
   run:
-    - python
-    #- {{ pin_compatible("qt", max_pin="x.x") }}
-    - enum34  # [py27]
+    - pyqt5
+    - pyqtwebengine
 
 test:
   files:
@@ -92,9 +35,6 @@ test:
     - PyQt5.QtWidgets
     - PyQt5.QtXml
     - PyQt5.QtXmlPatterns
-  commands:
-    - DISPLAY=localhost:1.0 xvfb-run -a bash -c 'python pyqt_test.py'  # [linux]
-    - pyuic5 --version  # [not win]
 
 about:
   home: http://www.riverbankcomputing.co.uk/software/pyqt
@@ -111,12 +51,4 @@ about:
   doc_url: https://www.riverbankcomputing.com/software/pyqt/
   dev_url: https://github.com/pyqt
 
-extra:
-  recipe-maintainers:
-    - ccordoba12
-    - mingwandroid
-    - gillins
-    - msarahan
-    - ocefpaf
-    - jschueller
 
