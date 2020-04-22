@@ -10,37 +10,12 @@ requirements:
     - pyqt5
     - pyqtwebengine
 
-test:
-  files:
-    - pyqt_test.py
-  imports:
-    - PyQt5.sip
-    - PyQt5.QtCore
-    - PyQt5.QtGui
-    - PyQt5.QtHelp
-    - PyQt5.QtMultimedia
-    - PyQt5.QtMultimediaWidgets
-    - PyQt5.QtNetwork
-    - PyQt5.QtOpenGL
-    - PyQt5.QtPrintSupport
-    - PyQt5.QtQml
-    - PyQt5.QtQuick
-    - PyQt5.QtSvg
-    - PyQt5.QtTest
-    - PyQt5.QtWebChannel
-    - PyQt5.QtWebEngine
-    - PyQt5.QtWebEngineCore
-    - PyQt5.QtWebEngineWidgets
-    - PyQt5.QtWebSockets
-    - PyQt5.QtWidgets
-    - PyQt5.QtXml
-    - PyQt5.QtXmlPatterns
+
 
 about:
   home: http://www.riverbankcomputing.co.uk/software/pyqt
   license: Commercial, GPL-2.0, GPL-3.0
   license_family: GPL
-  license_file: pyqt5/LICENSE
   summary: 'Python binding of the cross-platform GUI toolkit Qt.'
   description: |
     "PyQt is a set of Python v2 and v3 bindings for The Qt Company's Qt
