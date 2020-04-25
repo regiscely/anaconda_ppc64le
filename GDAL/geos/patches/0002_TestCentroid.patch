@@ -1,0 +1,21 @@
+diff --git a/tests/xmltester/tests/general/TestCentroid.xml b/TestCentroid.xml
+index 068b617..fdeeeea 100644
+--- a/tests/xmltester/tests/general/TestCentroid.xml
++++ b/tests/xmltester/tests/general/TestCentroid.xml
+@@ -231,16 +231,6 @@
+ <test><op name="getCentroid" arg1="A" >    POINT EMPTY   </op></test>
+ </case>
+ 
+-<case>
+-  <desc>A - almost degenerate triangle</desc>
+-  <a>    POLYGON((
+-56.528666666700 25.2101666667,
+-56.529000000000 25.2105000000,
+-56.528833333300 25.2103333333,
+-56.528666666700 25.2101666667))
+-	</a>
+-<test><op name="getCentroid" arg1="A" >    POINT (56.52883333335 25.21033333335)  </op></test>
+-</case>
+ 
+ <case>
+   <desc>A - almost degenerate MultiPolygon</desc>

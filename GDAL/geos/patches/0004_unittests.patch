@@ -1,0 +1,14 @@
+diff --git a/tests/unit/Makefile.am b/tests/unit/Makefile.am
+index 4b073f7..a3c506f 100644
+--- a/tests/unit/Makefile.am
++++ b/tests/unit/Makefile.am
+@@ -108,6 +108,7 @@ geos_unit_SOURCES = \
+        capi/GEOSSTRtreeTest.cpp \
+        capi/GEOSUnaryUnionTest.cpp \
+        capi/GEOSUserDataTest.cpp \
++       capi/GEOSVoronoiDiagramTest.cpp \
+        capi/GEOSWithinTest.cpp \
+        geom/CoordinateArraySequenceFactoryTest.cpp \
+        geom/CoordinateArraySequenceTest.cpp \
+(base) bash-4.2# cd /headless/anaconda_ppc64le/GDAL/geos/patches/
+

@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am.1
+index b20dafe..83f8c78 100644
+--- a/tests/xmltester/Makefile.am
++++ b/tests/xmltester/Makefile.am
+@@ -87,7 +87,6 @@ SAFE_XMLTESTS= \
+        $(srcdir)/tests/issue/issue-geos-234.xml \
+        $(srcdir)/tests/issue/issue-geos-244.xml \
+        $(srcdir)/tests/issue/issue-geos-275.xml \
+-       $(srcdir)/tests/issue/issue-geos-350.xml \
+        $(srcdir)/tests/issue/issue-geos-356.xml \
+        $(srcdir)/tests/issue/issue-geos-358.xml \
+        $(srcdir)/tests/issue/issue-geos-360.xml \
+

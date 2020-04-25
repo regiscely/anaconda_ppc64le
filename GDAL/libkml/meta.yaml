@@ -1,0 +1,54 @@
+{% set version = "1.3.0" %}
+
+package:
+  name: libkml
+  version: {{ version }}
+
+source:
+  url: https://github.com/libkml/libkml/archive/{{ version }}.tar.gz
+  sha256: 8892439e5570091965aaffe30b08631fdf7ca7f81f6495b4648f0950d7ea7963
+  patches:
+    # Patches for vc14. If this works we should wrapit in a ifdef and send the patch upstream.
+    - empty_char.patch  # [win and vc==14]
+
+build:
+  number: 1011
+  skip: True  # [vc<14 and win]
+  run_exports:
+    # no ABI lab result.  Pinning to major-minor as conda-forge has.
+    - {{ pin_subpackage('libkml', max_pin='x.x') }}
+
+requirements:
+  build:
+    - cmake
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - boost-cpp
+    - expat
+    - zlib
+  run:
+    - boost-cpp
+    - expat
+    - zlib
+
+test:
+  commands:
+    - test -f $PREFIX/lib/libkmlbase.so.1  # [linux]
+    - test -f $PREFIX/lib/libkmlbase.dylib  # [osx]
+    - if not exist %LIBRARY_LIB%\\kmlbase.lib exit 1  # [win]
+
+about:
+  home: https://github.com/libkml/libkml
+  license: BSD 3-Clause
+  license_file: LICENSE
+  summary: 'Reference implementation of OGC KML 2.2'
+  description: |
+    This is Google's reference implementation of OGC KML 2.2.
+    It also includes implementations of Google's gx: extensions used by Google Earth,
+    as well as several utility libraries for working with other formats.
+extra:
+  recipe-maintainers:
+    - ocefpaf
+    - msarahan
+

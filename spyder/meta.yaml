@@ -10,6 +10,7 @@ source:
   sha256: 49336f68812e91790b135cf680fcd2f18f5353c909027a7749881fe75d94528d
   patches:
     - race_condition_on_exit.patch
+    - no_check_for_update.patch
 
 build:
   number: 0

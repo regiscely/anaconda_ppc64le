@@ -1,0 +1,76 @@
+{% set name = "TileDB" %}
+{% set version = "1.7.7" %}
+{% set sha256 = "3530bcd9093aaa64d174aaa29346bf62d2c1a44bf20a38d053c1c12e234208ec" %}
+
+package:
+  name: tiledb
+  version: {{ version }}
+
+source:
+  fn: {{ name }}-{{ version }}.tar.gz
+  url: https://github.com/TileDB-Inc/{{ name }}/archive/{{ version }}.tar.gz
+  sha256: {{ sha256 }}
+  patches:
+    - 0001-Conda-only-patch-capnproto-build-to-work-with-anacon.patch
+
+build:
+  number: 1
+  run_exports:
+    # https://abi-laboratory.pro/?view=timeline&l=tiledb
+    - {{ pin_subpackage('tiledb', 'x.x') }}
+  skip: true  # [win and vc<14]
+
+requirements:
+  build:
+    - cmake
+    - pkg-config  # [not win]
+    - {{ compiler('cxx') }}
+  host:
+    - zlib
+    - bzip2
+    - zstd
+    - lz4-c
+    - tbb-devel 2018.0.5
+  run:
+    - zlib
+    - bzip2
+    - zstd
+    - lz4-c
+    - tbb 2018.0.5
+    - curl
+
+test:
+  #  downstreams:
+  #  - tiledb-py
+  commands:
+    - test -e $PREFIX/include/tiledb/tiledb.h  # [not win]
+    - test -e $PREFIX/include/tiledb/tiledb  # [not win]
+    - test -e $PREFIX/lib/libtiledb$SHLIB_EXT  # [linux]
+    - test -e $PREFIX/lib/libtiledb$SHLIB_EXT  # [osx]
+
+    - if exist %LIBRARY_INC%\\tiledb\\tiledb (exit 0) else (exit 1)  # [win]
+    - if exist %LIBRARY_INC%\\tiledb\\tiledb.h (exit 0) else (exit 1)  # [win]
+    - if exist %LIBRARY_LIB%\\tiledb.lib (exit 0) else (exit 1)  # [win]
+    - if exist %LIBRARY_LIB%\\cmake\\TileDB\\TileDBConfig.cmake (exit 0) else (exit 1)  # [win]
+    - if exist %PREFIX%\\Library\\bin\\tiledb.dll (exit 0) else (exit 1)  # [win]
+
+about:
+  home: http://tiledb.io
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: TileDB sparse and dense multi-dimensional array data management
+  description: |
+    TileDB is an efficient multi-dimensional array management system which introduces
+    a novel on-disk format that can effectively store dense and sparse array data with
+    support for fast updates and reads. It features excellent compression, and an efficient
+    parallel I/O system with high scalability.
+  doc_url: http://docs.tiledb.io
+  dev_url: https://github.com/TileDB-Inc/TileDB
+
+extra:
+  recipe-maintainers:
+    - stavrospapadopoulos
+    - shelnutt2
+    - ihnorton
+

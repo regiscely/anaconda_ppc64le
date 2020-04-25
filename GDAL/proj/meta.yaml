@@ -1,0 +1,58 @@
+{% set version = "6.0.0" %}
+
+package:
+  name: proj
+  version: {{ version }}
+
+source:
+  - url: http://download.osgeo.org/proj/proj-{{ version }}.tar.gz
+    sha256: 4510a2c1c8f9056374708a867c51b1192e8d6f9a5198dd320bf6a168e44a3657 
+
+build:
+  number: 3
+  skip: True  # [win and vc<14]
+  run_exports:
+    # so name changes in bugfix revisions.  Pin to bugfix revision.
+    #    https://abi-laboratory.pro/tracker/timeline/proj/
+    - {{ pin_subpackage('proj', max_pin='x.x.x') }}
+
+requirements:
+  build:
+    - cmake  # [win]
+    - pkg-config  # [not win]
+    - make  # [not win]
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - sqlite
+    - libtiff
+    - libcurl
+  run:
+    - sqlite
+    - libtiff
+    - libcurl
+  run_constrained:
+    - proj4 ==999999999999
+
+test:
+  commands:
+    - if not exist %LIBRARY_LIB%\\proj.lib exit 1  # [win]
+    - echo -105 40 | proj +proj=utm +zone=13 +ellps=WGS84
+    - echo -117 30 | cs2cs +proj=latlong +datum=NAD27 +to +proj=latlong +datum=NAD83
+    - echo -105 40 | cs2cs +init=epsg:4326 +to +init=epsg:2975
+
+about:
+  home: https://proj.org/
+  license: MIT
+  license_file: COPYING
+  summary: 'Cartographic Projections and Coordinate Transformations Library'
+
+extra:
+  recipe-maintainers:
+    - hobu
+    - msarahan
+    - mwtoews
+    - ocefpaf
+    - pelson
+    - snowman2
+    - xylar

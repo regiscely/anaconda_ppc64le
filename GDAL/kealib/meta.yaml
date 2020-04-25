@@ -1,0 +1,45 @@
+{% set version = "1.4.13" %}
+
+package:
+  name: kealib
+  version: {{ version }}
+
+source:
+  url: https://github.com/ubarsc/kealib/releases/download/kealib-{{ version }}/kealib-{{ version }}.tar.gz
+  sha256: 4135d13080ace420df8a0e39347c7fff939a94425b4d61c4cd6c3dd90563f0c6
+
+build:
+  number: 1
+  skip: True  # [win and vc<14]
+  run_exports:
+    - {{ pin_subpackage('kealib', max_pin='x.x') }}
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - make  # [unix]
+  host:
+    - hdf5
+  run:
+    - hdf5
+
+#test:
+#  requires:
+#    - libgdal
+#  commands:
+#    # check we haven't broken GDAL
+#    - gdal_translate --formats
+
+about:
+  home: http://kealib.org/
+  license: MIT
+  license_file: LICENSE.txt
+  summary: The KEA format provides an implementation of the GDAL specification within the the HDF5 file format.
+
+extra:
+  recipe-maintainers:
+    - gillins
+    - danclewley
+

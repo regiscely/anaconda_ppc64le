@@ -1,0 +1,21 @@
+diff --git a/tests/unit/Makefile.am b/tests/unit/Makefile.am
+index 88c4816..4b073f7 100644
+--- a/tests/unit/Makefile.am
++++ b/tests/unit/Makefile.am
+@@ -108,7 +108,6 @@ geos_unit_SOURCES = \
+        capi/GEOSSTRtreeTest.cpp \
+        capi/GEOSUnaryUnionTest.cpp \
+        capi/GEOSUserDataTest.cpp \
+-       capi/GEOSVoronoiDiagramTest.cpp \
+        capi/GEOSWithinTest.cpp \
+        geom/CoordinateArraySequenceFactoryTest.cpp \
+        geom/CoordinateArraySequenceTest.cpp \
+@@ -150,7 +149,6 @@ geos_unit_SOURCES = \
+        io/WKTReaderTest.cpp \
+        io/WKTWriterTest.cpp \
+        io/WriterTest.cpp \
+-       linearref/LengthIndexedLineTest.cpp \
+        noding/BasicSegmentStringTest.cpp \
+        noding/NodedSegmentStringTest.cpp \
+        noding/OrientedCoordinateArrayTest.cpp \
+
