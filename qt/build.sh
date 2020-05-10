@@ -85,6 +85,15 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     export CC=${GCC}
     export CXX=${GXX}
 
+    # ugly fixes
+    # pb with ld provided in conda package
+    cp /bin/ld ${PREFIX}/bin
+   
+    # Missing powerpc syscalls def
+    # replace asm/unistd.h
+    cp /usr/include/asm/unistd.h ${PREFIX}/powerpc64le-conda_cos7-linux-gnu/sysroot/usr/include/asm/unistd.h
+
+
     conda create -y --prefix "${SRC_DIR}/openssl_hack" -c https://repo.continuum.io/pkgs/main  \
                   --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack"  \
                   openssl=${openssl}
@@ -170,10 +179,11 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # RC
     export PKG_CONFIG_PATH=${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64/pkgconfig/:${BUILD_PREFIX}/${HOST}/sysroot/usr/share/pkgconfig/:${BUILD_PREFIX}/${HOST}/sysroot/lib64/pkgconfig/
     echo "Starting Configure Script"
-    
+   
     ./configure -prefix ${PREFIX} \
                 -libdir ${PREFIX}/lib \
                 -bindir ${PREFIX}/bin \
+                -rpath \
                 -headerdir ${PREFIX}/include/qt \
                 -archdatadir ${PREFIX} \
                 -datadir ${PREFIX} \
@@ -182,16 +192,20 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -I ${PREFIX}/include \
                 -L ${PREFIX}/lib \
                 -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
-                -L /tmp/libs \
+                -R ${PREFIX}/lib \
+                -system-libjpeg \
+                -system-libpng \
+                -system-zlib \
                 -opensource \
                 -confirm-license \
                 -verbose 
 
      export LD_LIBRARY_PATH=/tmp/libs:$PREFIX/lib:${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64:$LD_LIBRARY_PATH
+
      echo "GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
      echo "GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-     echo $PREFIX
-     echo $SRC_DIR
+     echo ${PREFIX}
+     echo ${SRC_DIR}
      echo "GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
      echo "GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 
@@ -199,58 +213,8 @@ if [[ ${HOST} =~ .*linux.* ]]; then
      VERBOSE=1 CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j 4 || exit 1
 
 
+     echo "ENDENDEND"
 
-#    ./configure -prefix ${PREFIX} \
-#                -libdir ${PREFIX}/lib \
-#                -bindir ${PREFIX}/bin \
-#                -headerdir ${PREFIX}/include/qt \
-#                -archdatadir ${PREFIX} \
-#                -datadir ${PREFIX} \
-#                -I ${SRC_DIR}/openssl_hack/include \
-#                -I ${PREFIX}/include \
-#                -L ${PREFIX}/lib \
-#                -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
-#                -release \
-#                -opensource \
-#                -confirm-license \
-#                -shared \
-#                -nomake examples \
-#                -nomake tests \
-#                -verbose \
-#                -skip wayland \
-#                -system-libjpeg \
-#                -system-libpng \
-#                -system-zlib \
-#                -system-sqlite \
-#                -plugin-sql-sqlite \
-#                -plugin-sql-mysql \
-#                -plugin-sql-psql \
-#                -qt-pcre \
-#                -qt-xcb \
-#                -xkbcommon \
-#                -dbus \
-#                -no-linuxfb \
-#                -no-libudev \
-#                -no-avx \
-#                -no-avx2 \
-#                -optimize-size \
-#                -reduce-relocations \
-#                -cups \
-#                -openssl-linked \
-#                -openssl \
-#                -Wno-expansion-to-defined \
-#                -D _X_INLINE=inline \
-#                -D XK_dead_currency=0xfe6f \
-#                -D _FORTIFY_SOURCE=2 \
-#                -D XK_ISO_Level5_Lock=0xfe13 \
-#                -D FC_WEIGHT_EXTRABLACK=215 \
-#                -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
-#                -D GLX_GLXEXT_PROTOTYPES \
-#                "${SKIPS[@]}"
-
-# ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
-#                -ltcg \
-#                --disable-new-dtags \
 
     if [[ ${MINIMAL_BUILD} != yes ]]; then
       CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
@@ -262,7 +226,10 @@ if [[ ${HOST} =~ .*linux.* ]]; then
 
     echo "Start Building "
     VERBOSE=1 CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
+    echo "REGISDEBUG"
     make install
+    echo "REGISDEBUG2"
+
 fi
 
 

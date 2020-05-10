@@ -5,10 +5,10 @@ package:
   version: {{ version }}
 
 source:
-  - url: /tmp/qt-everywhere-src-{{ version }}_ppc64le.B.tar.gz
+  - url: /home/regis/qt-everywhere-src-{{ version }}_ppc64le.B.tar.gz
     md5: f294d0105f4606c0e47295c1d63623f0
     patches:
-       - patches/0004-qtbase-never-enable-new-dtags.patch
+       #- patches/0004-qtbase-never-enable-new-dtags.patch
        - patches/0006-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroo.patch
 
 #  - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
@@ -43,6 +43,8 @@ requirements:
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libx11') }}                # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
+    - {{ cdt('libXi-devel') }}           # [linux]
+    - {{ cdt('libXi') }}                 # [linux]
     - {{ cdt('libx11-common') }}         # [linux]
     - {{ cdt('libxext') }}               # [linux]
     - {{ cdt('libxext-devel') }}         # [linux]
@@ -83,7 +85,7 @@ requirements:
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
     - {{ cdt('libxxf86vm-devel') }}      # [linux]
-    - {{ cdt('cups-devel') }}            # [linux]
+    #- {{ cdt('cups-devel') }}            # [linux]
 
     # For fontconfig + freetype
     - pkg-config                         # [linux]
